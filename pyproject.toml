@@ -1,12 +1,38 @@
-[tool.poetry]
+[project]
 name = "project-chimera"
 version = "0.1.0"
-description = ""
-authors = ["zuko"]
+description = "Spec-driven agentic infrastructure for autonomous AI influencers."
+readme = "README.md"
+requires-python = ">=3.11"
 
-[tool.poetry.dependencies]
-python = "^3.9"
+dependencies = [
+	"fastapi",
+	"pydantic>=2.0",
+	"pytest>=9.0.2",
+	"redis",
+]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[project.optional-dependencies]
+dev = [
+	"pytest",
+	"ruff",
+	"black",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "black>=26.1.0",
+    "ruff>=0.15.0",
+]
