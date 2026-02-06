@@ -1,3 +1,8 @@
+"""
+Tests for the Skills Interface.
+Validates all skills follow defined input/output contracts.
+"""
+
 from __future__ import annotations
 
 import importlib
@@ -80,3 +85,34 @@ def test_post_content_accepts_valid_params():
     ).model_dump()
     result = post_content(payload)
     assert isinstance(result, dict)
+
+
+class TestSkillsInterface:
+    """Ensure all skills have consistent interfaces."""
+
+    def test_skill_has_execute_method(self):
+        """All skills must have an 'execute' method."""
+        # from skills.skill_fetch_trends import FetchTrendsSkill
+        # skill = FetchTrendsSkill()
+        # assert hasattr(skill, "execute")
+        assert False, "Skill implementation not found"
+
+    def test_skill_returns_dict(self):
+        """All skills must return a dictionary result."""
+        assert False, "Skill implementation not found"
+
+    def test_skill_includes_metadata(self):
+        """All skill results must include execution metadata."""
+        expected_fields = ["execution_time", "skill_name", "success"]
+        result = {}
+
+        for field in expected_fields:
+            assert field in result, f"Result must contain '{field}'"
+
+    def test_generate_image_skill_contract(self):
+        """Image generation skill must follow its contract."""
+        assert False, "Image skill implementation not found"
+
+    def test_post_content_skill_contract(self):
+        """Post content skill must follow its contract."""
+        assert False, "Post content skill implementation not found"

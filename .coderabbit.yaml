@@ -1,6 +1,35 @@
+# CodeRabbit AI Review Configuration
 version: 1
-language: en
+language: "en"
+
 reviews:
-  auto_review:
-    enabled: true
-    drafts: false
+  profile: "assertive"
+  request_changes_workflow: true
+  high_level_summary: true
+
+  path_instructions:
+    - path: "specs/**"
+      instructions: |
+        This is a specification file. Ensure:
+        - Clear and unambiguous language
+        - All contracts are complete
+        - No missing fields in schemas
+    
+    - path: "skills/**"
+      instructions: |
+        This is a skill definition. Verify:
+        - Input/Output contracts are defined
+        - Aligns with specs/technical.md
+    
+    - path: "tests/**"
+      instructions: |
+        This is a test file. Check:
+        - Tests define contracts (TDD approach)
+        - References spec requirements
+
+custom_rules:
+  - name: "spec_alignment"
+    description: "All code must reference specs/"
+    
+  - name: "security_check"
+    description: "No hardcoded secrets"
