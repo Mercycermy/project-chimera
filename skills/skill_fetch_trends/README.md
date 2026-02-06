@@ -1,37 +1,105 @@
-# skill_fetch_trends
+# Skill: Fetch Trends
+
+> **Version**: 1.0.0  
+> **Status**: Active  
+> **Category**: Perception
 
 ## Purpose
-- Trend discovery and summarization for target channels
+Aggregates trending topics from social platforms and news sources to inform content strategy.
 
-## Inputs
-- Query topic, time window, locale
-- Optional filters: sources, keywords, exclusions
+---
 
-## Outputs
-- Ranked trend list with scores
-- Summary bullets and citations
+## MCP Tool Definition
 
-## MCP Tool Contract
-- Tool name and version
-- Required/optional fields and types
+```json
+{
+  "name": "fetch_trends",
+  "description": "Fetches trending topics from social platforms and news sources.",
+  "inputSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "platform": {
+        "type": "string",
+        "enum": ["twitter", "tiktok", "google_news"],
+        "description": "The source platform for trends"
+      },
+      "niche": {
+        "type": "string",
+        "description": "Specialized topic filter (e.g., crypto, fashion)"
+      },
+      "limit": {
+        "type": "integer",
+        "default": 10,
+        "minimum": 1,
+        "maximum": 50,
+        "description": "Maximum results to return"
+      }
+    },
+    "required": ["platform"]
+  }
+}
+```
 
-## Validation
-- Required fields, limits, and default values
+---
+
+## Input Contract
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `platform` | string | Yes | The source platform (`twitter`, `tiktok`, `google_news`) |
+| `niche` | string | No | Specialized topic filter (e.g., `crypto`, `fashion`) |
+| `limit` | integer | No | Max results to return (default: 10, max: 50) |
+
+---
+
+## Output Contract
+
+```json
+{
+  "trends": [
+    {
+      "topic": "Agentic AI",
+      "volume": 15000,
+      "sentiment": "positive",
+      "summary": "Rising interest in autonomous coding agents."
+    }
+  ],
+  "timestamp": "2026-02-05T12:00:00Z",
+  "platform": "twitter",
+  "request_id": "uuid-v4"
+}
+```
+
+---
 
 ## Error Handling
-- Error codes and retry guidance
 
-## Rate Limits
-- Limits per minute/hour and backoff strategy
+| Code | Name | Description | Recovery |
+|------|------|-------------|----------|
+| `E001` | `InvalidPlatformError` | Unsupported platform specified | Check platform enum |
+| `E002` | `RateLimitExceeded` | API rate limit hit | Retry after 60s |
+| `E003` | `APIUnavailable` | Platform API down | Queue for later |
+| `E004` | `AuthenticationFailed` | Invalid API credentials | Alert operator |
 
-## Logging
-- What is logged for audit and debugging
+---
 
-## Examples
-- Example input and output payloads
+## Usage Examples
 
-## Tests
-- Contract tests and edge cases
+### Twitter Tech Trends
+```json
+{
+  "platform": "twitter",
+  "niche": "tech",
+  "limit": 5
+}
+```
 
-## Change Log
-- Date, author, summary of changes
+### TikTok Fashion Trends
+```json
+{
+  "platform": "tiktok",
+  "niche": "fashion",
+  "limit": 20
+}
+```

@@ -47,10 +47,10 @@ graph TD
 **Confidence Thresholds**:
 ```python
 CONFIDENCE_THRESHOLDS = {
-    "auto_approve": 0.95,      # Agent proceeds autonomously
+    "auto_approve": 0.95,      # Agent proceeds autonomously (pre-publish tasks)
     "soft_review": 0.85,       # Log for asynchronous human review
     "hard_review": 0.70,       # Block until human approves
-    "reject": 0.50             # Auto-reject, request clarification
+    "reject": 0.70             # Below this is blocked, requires manual approval
 }
 ```
 
