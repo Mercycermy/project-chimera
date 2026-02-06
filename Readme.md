@@ -1,136 +1,55 @@
-# Project Chimera — Research Documentation
+# Project Chimera
 
-> **Role**: Forward Deployed Engineer (FDE) Trainee  
-> **Date**: February 2026  
-> **Status**: Day 1 — Research & Architecture Phase
+Autonomous Influencer Network: a spec-driven system for AI agents that perceive trends, generate content, and act through MCP tools with human-in-the-loop governance.
 
----
+## Status
 
-## Overview
+Research and contract-first phase. Tests are intentionally failing until skill implementations match their defined contracts.
 
-Project Chimera is an **Autonomous Influencer Network** — a system designed to create, manage, and deploy AI-powered autonomous influencer agents capable of research, content generation, social engagement, and economic participation without constant human intervention.
+## Core Architecture
 
-This repository contains comprehensive research documentation, architectural analysis, and strategic planning for the Project Chimera infrastructure.
+- Hierarchical Swarm: Planner -> Worker -> Judge
+- MCP-only external interactions
+- HITL enforcement for public-facing content
+- Spec-driven development with JSON Schema contracts
 
-## Core Concepts
+## Project Layout
 
-### What is Project Chimera?
+- Specs and contracts: [specs/_meta.md](specs/_meta.md), [specs/functional.md](specs/functional.md), [specs/technical.md](specs/technical.md)
+- Skill definitions: [skills/README.md](skills/README.md) and per-skill README files
+- Research notes: [research/architecture_strategy.md](research/architecture_strategy.md)
+- Tests: [tests](tests)
 
-Project Chimera represents a paradigm shift from traditional content automation to **Autonomous AI Agents** — persistent, goal-directed digital entities with:
+## Quick Start (uv)
 
-- **Perception**: Ability to monitor trends, news, and social signals
-- **Reasoning**: Strategic planning and decision-making capabilities
-- **Creative Expression**: Multimodal content generation
-- **Economic Agency**: On-chain financial transactions via crypto wallets
+Prerequisites: Python 3.11+, [uv](https://github.com/astral-sh/uv)
 
-### Key Architectural Patterns
-
-| Pattern | Description |
-|---------|-------------|
-| **Hierarchical Swarm** | Planner → Worker → Judge coordination model |
-| **Model Context Protocol (MCP)** | Universal interface for external integrations |
-| **Human-in-the-Loop (HITL)** | Confidence-based escalation for content approval |
-| **Agentic Commerce** | Autonomous financial transactions via Coinbase AgentKit |
-
----
-
-
-## Architecture Overview
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    EXTERNAL LAYER                           │
-│   ┌──────────┐                     ┌────────────────────┐   │
-│   │   User   │                     │  External Agents   │   │
-│   └────┬─────┘                     └──────────┬─────────┘   │
-│        │                                      │             │
-│        ▼                                      ▼             │
-│   ┌─────────┐                    ┌────────────────────┐     │
-│   │ Gateway │                    │ Agent Social       │     │
-│   └────┬────┘                    │ Interface (ASI)    │     │
-│        │                         └──────────┬─────────┘     │
-└────────┼────────────────────────────────────┼───────────────┘
-         │                                    │
-         ▼                                    ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      CORE LAYER                             │
-│                    ┌──────────┐                             │
-│                    │ Planner  │                             │
-│                    └────┬─────┘                             │
-│           ┌─────────────┼─────────────┐                     │
-│           ▼             ▼             ▼                     │
-│   ┌───────────┐ ┌───────────┐ ┌───────────┐                 │
-│   │  Content  │ │ Research  │ │ Analytics │                 │
-│   │  Worker   │ │  Worker   │ │  Worker   │                 │
-│   └─────┬─────┘ └─────┬─────┘ └─────┬─────┘                 │
-│         └─────────────┼─────────────┘                       │
-│                       ▼                                     │
-│                 ┌──────────┐                                │
-│                 │  Judge   │                                │
-│                 └────┬─────┘                                │
-│           ┌──────────┴──────────┐                           │
-│           ▼                     ▼                           │
-│   ┌──────────────┐      ┌────────────┐                      │
-│   │ HITL Review  │      │  Executor  │                      │
-│   └──────────────┘      └──────┬─────┘                      │
-└─────────────────────────────────┼───────────────────────────┘
-                                  │
-┌─────────────────────────────────┼───────────────────────────┐
-│                      DATA LAYER │                           │
-│           ┌─────────────────────┼─────────────────────┐     │
-│           ▼                     ▼                     ▼     │
-│   ┌──────────────┐     ┌──────────────┐     ┌────────────┐  │
-│   │  PostgreSQL  │     │  Vector DB   │     │   Redis    │  │
-│   │  (metadata)  │     │  (memory)    │     │  (cache)   │  │
-│   └──────────────┘     └──────────────┘     └────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```bash
+uv pip install --system fastapi "pydantic>=2.0" "pytest>=9.0.2" redis black flake8
+pytest -q
 ```
 
----
+## Make Targets
 
-## Key Technologies
-
-| Category | Technology | Purpose |
-|----------|------------|---------|
-| **Runtime** | Python (with `uv`) | Core agent logic and orchestration |
-| **LLM** | Gemini 3 Pro / Claude Opus 4.5 | Reasoning and content generation |
-| **Vector DB** | Chroma / LanceDB / Weaviate | Long-term semantic memory |
-| **Relational DB** | PostgreSQL | Structured metadata and transactions |
-| **Cache** | Redis + BullMQ | Short-term state and task queuing |
-| **Protocol** | Model Context Protocol (MCP) | Universal tool/resource interface |
-| **Commerce** | Coinbase AgentKit | On-chain financial operations |
-
----
-
-## HITL Confidence Thresholds
-
-```python
-CONFIDENCE_THRESHOLDS = {
-    "auto_approve": 0.95,      # Agent proceeds autonomously
-    "soft_review": 0.85,       # Log for asynchronous human review
-    "hard_review": 0.70,       # Block until human approves
-    "reject": 0.50             # Auto-reject, request clarification
-}
+```bash
+make setup
+make test
+make test-cov
+make lint
+make spec-check
 ```
 
-## Key Insights
+## Docker
 
-### From a16z — The Trillion Dollar AI Code Stack
+```bash
+docker build -t project-chimera:latest .
+docker run --rm project-chimera:latest
+```
 
-> *Intent > Code | Specs > Prompts | Infrastructure > "Vibe Coding"*
+## Testing Notes
 
-- Agentic workflows over chatbots
-- Orchestration is the differentiator
-- Decoupled infrastructure for scalability
-
-### From OpenClaw/MoltBook — Agent Social Networks
-
-- Agents as first-class network citizens
-- Privacy and local control via self-hosting
-- Lane queue systems for concurrent task management
-- Bot-to-bot communication protocols
-
----
+- Contract tests are defined for skills and must pass before a skill is considered active.
+- Tests currently fail if skill entry points or contract-compliant outputs are missing.
 
 ## References
 
@@ -138,13 +57,3 @@ CONFIDENCE_THRESHOLDS = {
 - [Coinbase AgentKit](https://docs.cdp.coinbase.com/agent-kit/)
 - [The Trillion Dollar AI Code Stack (a16z)](https://a16z.com/the-trillion-dollar-ai-software-development-stack/)
 - [OpenClaw & MoltBook (The Conversation)](https://theconversation.com/openclaw-and-moltbook-why-a-diy-ai-agent-and-social-media-for-bots-feel-so-new-but-really-arent-274744)
-
----
-
-## License
-
-This documentation is for educational and research purposes as part of the FDE Trainee program.
-
----
-
-*Last Updated: February 4, 2026*
